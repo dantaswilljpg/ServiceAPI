@@ -21,7 +21,7 @@ public class ControladorEntidade<T> {
     @PostMapping
     public ResponseEntity<T> criarEntidade(@RequestBody T entidade) {
         entidades.add(entidade);
-        return new ResponseEntity<>(entidade, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(entidade);
     }
 
     @GetMapping
@@ -37,30 +37,29 @@ public class ControladorEntidade<T> {
 
         Page<T> paginaEntidades;
         if (filtrarPor != null && valorFiltro != null) {
-           
             paginaEntidades = servicoAPIBackend.obterEntidadesFiltradas(requisicaoPagina, filtrarPor, valorFiltro);
         } else {
             paginaEntidades = servicoAPIBackend.obterTodasEntidades(requisicaoPagina);
         }
 
-        return new ResponseEntity<>(paginaEntidades, HttpStatus.OK);
+        return ResponseEntity.ok(paginaEntidades);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<T> obterEntidadePorId(@PathVariable Long id) {
-        
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+      
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<T> atualizarEntidade(@PathVariable Long id, @RequestBody T entidade) {
-        /
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluirEntidade(@PathVariable Long id) {
-      
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 }

@@ -16,17 +16,34 @@ public class ServicoAPIBackend {
     @Autowired
     private MetricsEndpoint metricsEndpoint;
     
+    
     public ResponseEntity<String> buscarLocaisProximos(double latitude, double longitude, String palavraChave, String chaveAPI) {
-        UriComponentsBuilder construtor = UriComponentsBuilder.fromHttpUrl(URL_API_GOOGLE_PLACES)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(URL_API_GOOGLE_PLACES)
                 .queryParam("location", String.format("%f,%f", latitude, longitude))
                 .queryParam("radius", 5000)
                 .queryParam("keyword", palavraChave)
                 .queryParam("key", chaveAPI);
 
-        return restTemplate.getForEntity(construtor.toUriString(), String.class);
+        return restTemplate.getForEntity(builder.toUriString(), String.class);
     }
     
-    public Object obterMetricas() {
-        return metricsEndpoint.listNames();
+    
+    public ResponseEntity<Object> obterMetricasDoLocal(String localId) {
+        Object metrics = metricsEndpoint.metric(localId, null);
+        return ResponseEntity.ok(metrics);
+    }
+   
+ 
+    public ResponseEntity<Object> obterLocalizacaoDoLocal(String localId) {
+       
+        Object localizacao = null;al
+        return ResponseEntity.ok(localizacao);
+    }
+    
+    
+    public ResponseEntity<Object> obterFeedbacksDoLocal(String localId) {
+        
+        Object feedbacks = null; 
+        return ResponseEntity.ok(feedbacks);
     }
 }

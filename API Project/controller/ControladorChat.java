@@ -1,3 +1,5 @@
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -12,7 +14,7 @@ public class ControladorChat {
 
     @MessageMapping("/chat/enviar")
     @SendTo("/topico/chat")
-    public MensagemChat enviarMensagem(MensagemChat mensagem) {
+    public ResponseEntity<MensagemChat> enviarMensagem(MensagemChat mensagem) {
         mensagem.setIdMensagem(UUID.randomUUID().toString());
         mensagem.setTimestamp(LocalDateTime.now());
         mensagem.setTipo(TipoMensagem.TEXTO);
@@ -26,39 +28,41 @@ public class ControladorChat {
         List<String> anexos = extrairAnexos(mensagem.getConteudo());
         mensagem.setAnexos(anexos);
 
-        return mensagem;
+        return ResponseEntity.ok(mensagem);
     }
 
     @MessageMapping("/chat/historico/{salaId}")
     @SendTo("/topico/chat/{salaId}")
-    public List<MensagemChat> obterHistoricoChat(@PathVariable String salaId) {
-       
-        return new ArrayList<>();
+    public ResponseEntity<List<MensagemChat>> obterHistoricoChat(@PathVariable String salaId) {
+        List<MensagemChat> historico = new ArrayList<>();
+      
+        return ResponseEntity.ok(historico);
     }
 
     @MessageMapping("/chat/criarSala")
     @SendTo("/topico/salaCriada")
-    public String criarSalaChat() {
+    public ResponseEntity<String> criarSalaChat() {
       
-        return "";
+        return ResponseEntity.status(HttpStatus.CREATED).body("Sala criada com sucesso");
     }
 
     @MessageMapping("/chat/privado/{idUsuario}")
     @SendTo("/topico/privado/{idUsuario}")
-    public MensagemChat enviarMensagemPrivada(@PathVariable String idUsuario, MensagemChat mensagem) {
-       
-        return mensagem;
+    public ResponseEntity<MensagemChat> enviarMensagemPrivada(@PathVariable String idUsuario, MensagemChat mensagem) {
+      
+        return ResponseEntity.ok(mensagem);
     }
 
     @MessageMapping("/chat/entrarSala/{salaId}")
     @SendTo("/topico/entrarSala/{salaId}")
-    public String entrarSalaChat(@PathVariable String salaId) {
-        /
-        return "";
+    public ResponseEntity<String> entrarSalaChat(@PathVariable String salaId) {
+        
+        return ResponseEntity.ok("Usuário entrou na sala com sucesso");
     }
 
     private List<String> extrairMencoes(String conteudo) {
-         return new ArrayList<>();
+        
+        return new ArrayList<>();
     }
 
     private List<String> extrairHashtags(String conteudo) {

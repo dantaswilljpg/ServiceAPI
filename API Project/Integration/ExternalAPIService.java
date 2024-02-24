@@ -18,18 +18,17 @@ public class ExternalAPIService {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         
-     
         String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
                      "?location=" + latitude + "," + longitude +
                      "&radius=5000" +
                      "&keyword=" + palavraChave +
                      "&key=" + googleApiKey;
 
-        
         return restTemplate.exchange(url, HttpMethod.GET, null, String.class);
     }
 
     public ResponseEntity<Object> obterMetricas() {
-        return null;
+      
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
     }
 }

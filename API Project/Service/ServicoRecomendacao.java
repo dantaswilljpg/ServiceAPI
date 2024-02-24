@@ -1,4 +1,5 @@
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,21 +12,23 @@ public class ServicoRecomendacao {
         this.servicoAPIExterna = servicoAPIExterna;
     }
 
-    public String gerarRecomendacaoTreino(String userId) {
+    public ResponseEntity<String> gerarRecomendacaoTreino(String userId) {
+        ResponseEntity<String> respostaDadosAcademias = servicoAPIExterna.buscarAcademiasProximas("academia");
+        String dadosAcademias = respostaDadosAcademias.getBody();
 
-        ResponseEntity<String> respostaDadosExercicio = servicoAPIExterna.buscarDadosExercicio(userId);
-        String dadosExercicio = respostaDadosExercicio.getBody();
-       
-        return "Recomendação de treino para o usuário " + userId;
-    }
-
-    public String gerarRecomendacaoDieta(String userId) {
-     
-        return "Recomendação de dieta para o usuário " + userId;
-    }
-
-    public String atualizarRecomendacaoTreinoComFeedback(String userId, String feedback) {
         
-        return "Recomendação de treino atualizada para o usuário " + userId + " com feedback: " + feedback;
+
+        String recomendacao = "Recomendação de treino para o usuário " + userId;
+        return ResponseEntity.ok(recomendacao);
+    }
+
+    public ResponseEntity<String> gerarRecomendacaoDieta(String userId) {
+        String recomendacao = "Recomendação de dieta para o usuário " + userId;
+        return ResponseEntity.ok(recomendacao);
+    }
+
+    public ResponseEntity<String> atualizarRecomendacaoTreinoComFeedback(String userId, String feedback) {
+        String recomendacaoAtualizada = "Recomendação de treino atualizada para o usuário " + userId + " com feedback: " + feedback;
+        return ResponseEntity.ok(recomendacaoAtualizada);
     }
 }
