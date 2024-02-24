@@ -17,6 +17,11 @@ public class SegurancaConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.POST, "/login").permitAll()
             .anyRequest().authenticated()
             .and()
-            .addFilterBefore(new JwtTokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(tokenAutenticacao(), UsernamePasswordAuthenticationFilter.class);
+    }
+    
+    @Bean
+    public TokenAutenticacao tokenAutenticacao() {
+        return new TokenAutenticacao();
     }
 }
