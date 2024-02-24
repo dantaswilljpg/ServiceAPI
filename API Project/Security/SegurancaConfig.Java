@@ -1,6 +1,7 @@
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,7 +22,7 @@ public class SegurancaConfig extends WebSecurityConfigurerAdapter {
     }
     
     @Bean
-    public TokenAutenticacao tokenAutenticacao() {
-        return new TokenAutenticacao();
+    public ResponseEntity<Void> tokenAutenticacao() {
+        return ResponseEntity.ok().build();
     }
 }

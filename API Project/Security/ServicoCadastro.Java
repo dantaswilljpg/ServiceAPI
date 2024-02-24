@@ -3,6 +3,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+
 @Service
 public class ServicoCadastro {
 
@@ -13,6 +15,7 @@ public class ServicoCadastro {
     private EmailService emailService;
 
     public ResponseEntity<String> cadastrarUsuario(Usuario usuario) {
+
         
         ResponseEntity<String> validacaoEmail = servicoValidacao.validarEmail(usuario.getEmail());
         if (validacaoEmail.getStatusCode() != HttpStatus.OK) {
@@ -33,15 +36,21 @@ public class ServicoCadastro {
             return ResponseEntity.badRequest().body("Telefone não pode estar vazio");
         }
 
-        
         if (usuario.getEndereco() == null || usuario.getEndereco().isEmpty()) {
             return ResponseEntity.badRequest().body("Endereço não pode estar vazio");
         }
 
+        ResponseEntity<String> tokenResponse = TokenUtil.gerarToken(usuario.getEmail());
+        if (tokenResponse.getStatusCode() != HttpStatus.OK) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar token");
+        }
+        String token = tokenResponse.getBody();
+
         try {
             String assunto = "Confirmação de Cadastro";
-            String corpo = "Olá " + usuario.getNome() + ",\n\n" +
-                           "Obrigado por se cadastrar em nosso sistema! Por favor, clique no link a seguir para confirmar seu e-mail: [link de confirmação]";
+            String corpo = "Olá " + usuario.getNome() + ",<br><br>" +
+                    "Obrigado por se cadastrar em nosso sistema! Por favor, clique no link abaixo para confirmar seu e-mail:<br>" +
+                    "<a href=\"https://seusite.com/confirmar?token=" + token + "\">Confirmar E-mail</a>";
             emailService.enviarEmail(usuario.getEmail(), assunto, corpo);
         } catch (MessagingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao enviar e-mail de confirmação");
