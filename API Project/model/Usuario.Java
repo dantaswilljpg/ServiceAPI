@@ -3,6 +3,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Date; 
 
 @Entity
 public class Usuario {
@@ -19,7 +20,7 @@ public class Usuario {
     private String endereco; 
     private int idade;
     private boolean funcionario;
-
+    private Date dataNascimento; 
 
     public ResponseEntity<Long> getId() {
         return ResponseEntity.ok(id);
@@ -91,5 +92,13 @@ public class Usuario {
 
     public void setFuncionario(boolean funcionario) {
         this.funcionario = funcionario;
+    }
+
+    public ResponseEntity<Date> getDataNascimento() {
+        return ResponseEntity.ok(dataNascimento);
+    }
+
+    public void setDataNascimento(Date dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 }

@@ -3,6 +3,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Date;
+
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,6 +62,38 @@ public class ServicoValidacaoUsuario {
         return ResponseEntity.ok("CPF válido");
     }
 
+public ResponseEntity<String> validarDataNascimento(Date dataNascimento) {
+        if (dataNascimento == null) {
+            return ResponseEntity.badRequest().body("Data de nascimento não pode ser nula");
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dataNascimento);
+        
+        int ano = cal.get(Calendar.YEAR);
+
+        if (!isAnoBissexto(ano)) {
+            return ResponseEntity.badRequest().body("Ano de nascimento não é bissexto");
+        }
+
+        if (dataNascimento.after(new Date())) {
+            return ResponseEntity.badRequest().body("Data de nascimento não pode estar no futuro");
+        }
+
+        Calendar calMaxima = Calendar.getInstance();
+        calMaxima.add(Calendar.YEAR, -150); 
+
+        if (cal.before(calMaxima)) {
+            return ResponseEntity.badRequest().body("Idade inválida (superior a 150 anos)");
+        }
+
+        return ResponseEntity.ok("Data de nascimento válida");
+    }
+
+    private boolean isAnoBissexto(int ano) {
+        return (ano % 4 == 0 && ano % 100 != 0) || (ano % 400 == 0);
+    }
+}
        public ResponseEntity<String> validarEndereco(String endereco) {
         String url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
                 + "?input=" + endereco
